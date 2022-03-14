@@ -1,0 +1,110 @@
+kubectl run redis --image=redis123 --dry-run=client -o yaml > redis-definition.yaml
+
+kubectl create -f redis-definition.yaml
+
+kubectl get pods
+
+kubectl edit pod redis
+
+apiVersion: v1
+kind: Pod
+metadata:
+  creationTimestamp: "2022-03-09T14:47:26Z"
+  labels:
+    run: redis
+  name: redis
+  namespace: default
+  resourceVersion: "1045"
+  uid: d603ed21-9b11-48b7-ab4c-bf2dfff11a00
+spec:
+  containers:
+  - image: redis123
+    imagePullPolicy: Always
+    name: redis
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-tfmcw
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: controlplane
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - name: kube-api-access-tfmcw
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-09T14:47:26Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-09T14:47:26Z"
+    message: 'containers with unready status: [redis]'
+    reason: ContainersNotReady
+    status: "False"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-09T14:47:26Z"
+    message: 'containers with unready status: [redis]'
+    reason: ContainersNotReady
+    status: "False"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2022-03-09T14:47:26Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - image: redis123
+    imageID: ""
+    lastState: {}
+    name: redis
+    ready: false
+    restartCount: 0
+    started: false
+    state:
+      waiting:
+        message: Back-off pulling image "redis123"
+        reason: ImagePullBackOff
+  hostIP: 172.25.0.110
+  phase: Pending
+  podIP: 10.42.0.14
+  podIPs:
+  - ip: 10.42.0.14
+  qosClass: BestEffort
+  startTime: "2022-03-09T14:47:26Z"

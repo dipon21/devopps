@@ -1,0 +1,31 @@
+mkdir kubernets
+touch pod-definition.yaml
+vi pod-definition.yaml
+
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myapp-pod
+  labels:
+    app: myapp
+    type: front-end
+spec:
+ containers:
+  - name: nginx-container
+    image: nginx
+
+:x
+
+
+kubectl create -f pod-definition.yaml   /   kubectl apply-f pod-definition.yaml     same command
+
+
+kubectl get pod
+NAME        READY   STATUS    RESTARTS   AGE
+myapp-pod   1/1     Running   0          12s
+nginx       1/1     Running   0          23h
+
+
+kubectl describe pod  nginx
